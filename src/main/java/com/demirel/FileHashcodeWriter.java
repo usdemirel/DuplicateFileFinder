@@ -1,16 +1,18 @@
 package com.demirel;
 
 import java.io.*;
-import java.nio.file.*;
 import java.security.*;
 import java.util.*;
 
 public class FileHashcodeWriter {
 
+    static final String TEMP_FILE = "temp_serkan";
+    static final String FOLDER_TREE_FILE = "/folder_tree.serkan";
+
     public static void main(String[] args) {
         String parentDir = ConfigReader.getFolderPath();
-        SubfoldersWithFiles.main(new String[]{});
-        String filePaths = ConfigReader.getFolderPath() + "/folder_tree.serkan"; // Replace with your file containing folder paths
+        FolderTreeStructureFile.main(new String[]{});
+        String filePaths = parentDir + "/" + TEMP_FILE + FOLDER_TREE_FILE;
         readFolderPathsAndCreateHashcodeFiles(filePaths,parentDir);
     }
 
@@ -18,7 +20,7 @@ public class FileHashcodeWriter {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePaths))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if(line.contains("temp_serkan")){
+                if(line.contains(TEMP_FILE)){
                     continue;
                 }
                 createHashcodeFile(line,parentDir);
@@ -59,7 +61,7 @@ public class FileHashcodeWriter {
         String tempHashcodeFilePath2 = folderPath.replace(parentDir, "temp_serkan");
         String[] subfolders = tempHashcodeFilePath2.split("/");
         NestedFolderCreator.main(subfolders);
-        String hashcodeFilePath = tempHashcodeFilePath + "/hashcode.txt";
+        String hashcodeFilePath = tempHashcodeFilePath + "/hashcode.serkan";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(hashcodeFilePath))) {
             for (Map.Entry<String, String> entry : fileHashcodes.entrySet()) {
                 writer.write(entry.getKey() + "," + entry.getValue());
